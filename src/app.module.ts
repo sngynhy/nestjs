@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import config from './config/keys';
-import { UserModule } from './modules/user.module';
 import { MemberModule } from './modules/member.module';
 import { NoticeModule } from './modules/notice.module';
 
 @Module({
   imports: [
-    UserModule,
     MemberModule,
     MongooseModule.forRoot(config.mongoURI),
     NoticeModule,

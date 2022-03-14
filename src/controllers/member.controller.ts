@@ -35,18 +35,24 @@ export class MemberController {
 
   @Post()
   async createMember(@Res() res, @Body() createMemberDto: CreateMemberDto) {
-    try {
-      console.log(createMemberDto);
-      const member = await this.memberService.create(createMemberDto);
-      return res.status(HttpStatus.OK).json({
-        message: 'Member has been created successfully',
-        member,
-      });
-    } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Error: Member not created!',
-      });
-    }
+    console.log(createMemberDto);
+    const member = await this.memberService.create(createMemberDto);
+    return res.status(HttpStatus.OK).json({
+      message: 'Member has been created successfully',
+      member,
+    });
+    // try {
+    //   console.log(createMemberDto);
+    //   const member = await this.memberService.create(createMemberDto);
+    //   return res.status(HttpStatus.OK).json({
+    //     message: 'Member has been created successfully',
+    //     member,
+    //   });
+    // } catch (err) {
+    //   return res.status(HttpStatus.BAD_REQUEST).json({
+    //     message: 'Error: Member not created!',
+    //   });
+    // }
   }
 
   @Put(':/email')

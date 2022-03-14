@@ -5,19 +5,22 @@ export type MemberDocument = Member & Document;
 @Schema() // 해당 클래스를 스키마로 정의
 export class Member {
   @Prop()
-  position: string;
+  position: string; // 회원구분> 영업담당자, 관리자
 
   @Prop()
-  department: string;
+  department: string; // 부서
 
   @Prop()
-  name: string;
+  name: string; // 이름
 
   @Prop({ unique: true })
-  email: string;
+  email: string; // 이메일
 
   @Prop()
-  password: string;
+  password: string; // 비밀번호
+
+  @Prop()
+  profileImage: string; // 프로필사진
 }
 
 export const MemberSchema = SchemaFactory.createForClass(Member);

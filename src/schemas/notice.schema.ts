@@ -3,29 +3,44 @@ import * as mongoose from 'mongoose';
 import { Member } from './member.schema';
 
 export type NoticeDocument = Notice & Document;
-// Inquiry
+
 @Schema()
 export class Notice {
-  @Prop()
-  _no: number;
+  // @Prop()
+  // notice_no: number; // 게시글 번호
 
   @Prop()
-  state: string; // 처리 상태
+  category: string; // 카테고리> 전체, 보도자료, 설치 및 업데이트, 이벤트, 기타
 
   @Prop()
-  title: string;
+  access: number; // 접근권한> 모두(1), 영업담당자(0)
+
+  // @Prop()
+  // uploadReserve: boolean; // 업로드방법> 지금(false), 예약(true)
+
+  @Prop({ default: Date.now })
+  createdAt: Date; // 게시글 작성 날짜
 
   @Prop()
-  content: string;
+  updatedAt: Date; // 게시글 수정 날짜
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Member.email' })
+  writer: Member; // 작성자
 
   @Prop()
-  uploadDate: Date;
+  important: boolean; // 중요도 체크
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Member' })
-  writer: Member;
+  @Prop()
+  title: string; // 제목
+
+  @Prop()
+  content: string; // 내용
+
+  @Prop()
+  uploadfile: string; // 첨부파일
 
   @Prop([String])
-  tags: string[];
+  tags: string[]; // 태그
 }
 
 export const NoticeSchema = SchemaFactory.createForClass(Notice);

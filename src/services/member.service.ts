@@ -25,8 +25,8 @@ export class MemberService {
   }
 
   async create(createMemberDto: CreateMemberDto): Promise<Member> {
-    const createMember = new this.memberModel(createMemberDto);
-    return createMember.save();
+    const newMember = new this.memberModel(createMemberDto);
+    return newMember.save();
   }
 
   async update(email: string, updateMemberDto: UpdateMemberDto) {
