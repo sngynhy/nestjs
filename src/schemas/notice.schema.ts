@@ -6,17 +6,14 @@ export type NoticeDocument = Notice & Document;
 
 @Schema()
 export class Notice {
-  // @Prop()
-  // notice_no: number; // 게시글 번호
-
   @Prop()
   category: string; // 카테고리> 전체, 보도자료, 설치 및 업데이트, 이벤트, 기타
 
   @Prop()
   access: number; // 접근권한> 모두(1), 영업담당자(0)
 
-  // @Prop()
-  // uploadReserve: boolean; // 업로드방법> 지금(false), 예약(true)
+  @Prop()
+  uploadReserve: boolean; // 업로드방법> 지금(false), 예약(true)
 
   @Prop({ default: Date.now })
   createdAt: Date; // 게시글 작성 날짜
@@ -37,10 +34,10 @@ export class Notice {
   content: string; // 내용
 
   @Prop()
-  uploadfile: string; // 첨부파일
+  uploadFile: string; // 첨부파일
 
-  @Prop([String])
-  tags: string[]; // 태그
+  // @Prop([String])
+  // tags: string[]; // 태그
 }
 
 export const NoticeSchema = SchemaFactory.createForClass(Notice);

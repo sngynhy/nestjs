@@ -18,18 +18,17 @@ export class NoticeService {
     return await this.noticeModel.find().skip(offset).limit(limit).exec();
   }
 
+  // 현재 시점으로 발행된 게시글 출력
+
+  // 발행 예약 게시글 출력
+
   // 특정 검색어로 조회 - 제목 or 내용
   async keywordSearch(keyword: string): Promise<Notice[]> {
     const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
     const searchRgx = rgx(keyword);
 
     const notice = await this.noticeModel
-      .find({
-        $or: [
-          { title: searchRgx, $options: 'i' },
-          { content: searchRgx, $options: 'i' },
-        ],
-      })
+      .find({ title: searchRgx, $options: 'i' }) // $options: 'i' - 대소문자 구분 X
       .exec();
     if (!notice) {
       throw new NotFoundException('검색 결과 없음');

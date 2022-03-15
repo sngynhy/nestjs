@@ -31,15 +31,15 @@ export class NoticeController {
     return res.status(HttpStatus.OK).json(notices);
   }
 
-  // 검색 함수 구현 추가
-  @Get('/search')
+  // 검색 함수 구현 추가 - 제목 or 내용 특정 키워드로 검색
+  @Get('/search') // /notice/search?keyword=3 (쿼리스트링)
   async search(@Query('keyword') keyword: string, @Res() res) {
     const notices = await this.noticeService.keywordSearch(keyword);
     return res.status(HttpStatus.OK).json(notices);
   }
 
   // 공지사항 세부 데이터 조회
-  @Get('/:id')
+  @Get('/get/:id')
   async findOne(@Res() res, @Param('id') noticeId: string) {
     console.log(noticeId);
     const notice = await this.noticeService.findOne(noticeId);
@@ -50,7 +50,7 @@ export class NoticeController {
   }
 
   // 공지사항 등록
-  @Post()
+  @Post('/create')
   async createNotice(@Body() createNoticeDto: CreateNoticeDto, @Res() res) {
     try {
       // console.log(' createNotice', createNoticeDto);
@@ -67,7 +67,7 @@ export class NoticeController {
   }
 
   // 공지사항 수정
-  @Put('/:id')
+  @Put('/update/:id')
   async updateNotice(
     @Param('id') noticeId: string,
     @Res() res,
@@ -90,7 +90,7 @@ export class NoticeController {
   }
 
   // 공지사항 삭제
-  @Delete('/:id')
+  @Delete('/delete/:id')
   async deleteNotice(@Param('id') noticeId: string, @Res() res) {
     const notice = await this.noticeService.delete(noticeId);
     if (!notice) {
