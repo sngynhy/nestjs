@@ -6,6 +6,8 @@ import { Member, MemberSchema } from '../schemas/member.schema';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
+import { AuthModule } from 'src/auth/auth.module';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   imports: [
@@ -17,8 +19,9 @@ import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
       secret: 'secret',
       signOptions: { expiresIn: '1y' },
     }),
+    // AuthModule,
   ],
   controllers: [MemberController],
-  providers: [MemberService, JwtStrategy],
+  providers: [MemberService, JwtStrategy, AuthService],
 })
 export class MemberModule {}

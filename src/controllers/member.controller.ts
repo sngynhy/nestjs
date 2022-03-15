@@ -17,13 +17,16 @@ import { LoginMemberDto } from 'src/dto/login-member.dto';
 import { MemberService } from 'src/services/member.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('member')
 export class MemberController {
-  authService: any;
-  constructor(private memberService: MemberService) {}
+  constructor(
+    private memberService: MemberService,
+    private authService: AuthService,
+  ) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
   async getAllMembers() {
     const members = await this.memberService.findAll();
@@ -39,11 +42,11 @@ export class MemberController {
   //   return res.status(HttpStatus.OK).json(member);
   // }
 
-  @UseGuards(LocalAuthGuard)
+  // @UseGuards(LocalAuthGuard)
   @Post('/auth/login')
   async login(@Body() loginMemberDto: LoginMemberDto) {
     console.log('@@@', loginMemberDto);
-    return this.authService.login(
+    return this.authService.validateMember(
       loginMemberDto.email,
       loginMemberDto.password,
     );
