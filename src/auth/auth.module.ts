@@ -13,7 +13,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret, // 토큰 서명 값 설정 - 유출 주의
-      signOptions: { expiresIn: '60s' }, // 토큰 유효시간 (임의 60초)
+      signOptions: { expiresIn: '600s' }, // 토큰 유효시간 (임의 60초)
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],

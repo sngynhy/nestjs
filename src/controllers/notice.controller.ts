@@ -13,12 +13,12 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateNoticeDto } from 'src/dto/create-notice.dto';
+import { CreateNoticeDto } from 'src/dto/notice/create-notice.dto';
 import { PaginationQueryDto } from 'src/dto/pagination-query.dto';
 import { NoticeService } from 'src/services/notice.service';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UpdateNoticeDto } from 'src/dto/update-notice.dto';
+import { UpdateNoticeDto } from 'src/dto/notice/update-notice.dto';
 
 @Controller('notice')
 export class NoticeController {
@@ -33,8 +33,12 @@ export class NoticeController {
 
   // 검색 함수 구현 추가 - 제목 or 내용 특정 키워드로 검색
   @Get('/search') // /notice/search?keyword=3 (쿼리스트링)
-  async search(@Query('keyword') keyword: string, @Res() res) {
-    const notices = await this.noticeService.keywordSearch(keyword);
+  async search(
+    @Query('category') category: string,
+    @Query('keyword') keyword: string,
+    @Res() res,
+  ) {
+    const notices = await this.noticeService.keywordSearch(category, keyword);
     return res.status(HttpStatus.OK).json(notices);
   }
 

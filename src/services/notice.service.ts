@@ -3,8 +3,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Notice } from 'src/schemas/notice.schema';
 import { PaginationQueryDto } from 'src/dto/pagination-query.dto';
-import { CreateNoticeDto } from 'src/dto/create-notice.dto';
-import { UpdateNoticeDto } from 'src/dto/update-notice.dto';
+import { CreateNoticeDto } from 'src/dto/notice/create-notice.dto';
+import { UpdateNoticeDto } from 'src/dto/notice/update-notice.dto';
 
 @Injectable()
 export class NoticeService {
@@ -23,12 +23,12 @@ export class NoticeService {
   // 발행 예약 게시글 출력
 
   // 특정 검색어로 조회 - 제목 or 내용
-  async keywordSearch(keyword: string): Promise<Notice[]> {
+  async keywordSearch(category: string, keyword: string): Promise<Notice[]> {
     const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
     const searchRgx = rgx(keyword);
 
     const notice = await this.noticeModel
-      .find({ title: searchRgx, $options: 'i' }) // $options: 'i' - 대소문자 구분 X
+      .find({ title: searchRgx, $options: 'i', category: category }) // $options: 'i' - 대소문자 구분 X
       .exec();
     if (!notice) {
       throw new NotFoundException('검색 결과 없음');
@@ -36,14 +36,14 @@ export class NoticeService {
     return notice;
   }
 
-  // 태그로 검색
-  async tagSearch(keyword: string): Promise<Notice[]> {
-    const notice = await this.noticeModel.find({ tag: keyword }).exec();
-    if (!notice) {
-      throw new NotFoundException('검색 결과 없음');
-    }
-    return notice;
-  }
+  // // 태그로 검색
+  // async tagSearch(keyword: string): Promise<Notice[]> {
+  //   const notice = await this.noticeModel.find({ tag: keyword }).exec();
+  //   if (!notice) {
+  //     throw new NotFoundException('검색 결과 없음');
+  //   }
+  //   return notice;
+  // }
 
   // 공지사항 세부 데이터
   async findOne(noticeId: string): Promise<Notice> {
@@ -69,11 +69,14 @@ export class NoticeService {
     noticeId: string,
     updateNoticeDto: UpdateNoticeDto,
   ): Promise<Notice> {
-    const updatedNotice = await this.noticeModel
-      .findByIdAndUpdate({ _id: noticeId }, updateNoticeDto)
-      .exec();
-
-    return updatedNotice;
+    try {
+      const updatedNotice = await this.noticeModel
+        .findByIdAndUpdate({ _id: noticeId }, updateNoticeDto)
+        .exec();
+      return updatedNotice;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // 공지사항 삭제

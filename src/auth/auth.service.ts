@@ -10,8 +10,7 @@ export class AuthService {
   ) {}
 
   async validateMember(email: string, password: string): Promise<any> {
-    console.log(' AuthService');
-    // const member = { password: 'asdf', email: 'test' };
+    // console.log(' AuthService');
     const member = await this.memberService.login(email, password);
     console.log('member : ', member);
     // 사용자가 요청한 비밀번호와 DB에서 조회한 비밀번호 일치여부 검사
@@ -20,11 +19,12 @@ export class AuthService {
 
       // 유저 정보를 통해 토큰 값 생성
       const access_token = await this.jwtService.sign(result);
-      console.log(' access_token: ', access_token);
+
       // 토큰 값 추가
       result['token'] = access_token;
 
       console.log(' result: ', result);
+
       // 비밀번호를 제외하고 유저 정보를 반환
       return result;
     }

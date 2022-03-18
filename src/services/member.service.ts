@@ -5,8 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateMemberDto } from 'src/dto/create-member.dto';
-import { UpdateMemberDto } from 'src/dto/update-member.dto';
+import { CreateMemberDto } from 'src/dto/member/create-member.dto';
+import { UpdateMemberDto } from 'src/dto/member/update-member.dto';
 import { Member } from 'src/schemas/member.schema';
 import { JwtService } from '@nestjs/jwt';
 
@@ -32,13 +32,11 @@ export class MemberService {
 
   // 로그인
   async login(email: string, password: string): Promise<Member> {
-    // console.log(' email: ', email);
-    // console.log(' password: ', password);
     const member = await this.memberModel
       .findOne({ email: email, password: password })
       .exec();
     if (!member) {
-      throw new UnauthorizedException('아이디와 비밀번호를 확인해주세요.');
+      throw new UnauthorizedException('아이디와 비밀번호를 다시 확인해주세요.');
     }
     return member;
   }
@@ -48,11 +46,13 @@ export class MemberService {
     return newMember.save();
   }
 
-  async update(email: string, updateMemberDto: UpdateMemberDto) {
-    const existMember = await this.memberModel.updateOne(
-      { email: email },
-      updateMemberDto,
-    );
+  async update(
+    email: string,
+    updateMemberDto: UpdateMemberDto,
+  ): Promise<Member> {
+    const existMember = await this.memberModel
+      .findOneAndUpdate({ email: email }, updateMemberDto)
+      .exec();
     if (!existMember) {
       throw new NotFoundException(`Member #${email} not found`);
     }

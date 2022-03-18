@@ -11,9 +11,9 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { CreateMemberDto } from 'src/dto/create-member.dto';
-import { UpdateMemberDto } from 'src/dto/update-member.dto';
-import { LoginMemberDto } from 'src/dto/login-member.dto';
+import { CreateMemberDto } from 'src/dto/member/create-member.dto';
+import { UpdateMemberDto } from 'src/dto/member/update-member.dto';
+import { LoginMemberDto } from 'src/dto/member/login-member.dto';
 import { MemberService } from 'src/services/member.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
@@ -33,19 +33,19 @@ export class MemberController {
     return members;
   }
 
-  // @Get('get/:email') // member/get/email@email.com
-  // async getMember(@Param('email') email: string, @Res() res) {
-  //   const member = await this.memberService.findOne(email);
-  //   if (!member) {
-  //     throw new NotFoundException('Member does not exist!');
-  //   }
-  //   return res.status(HttpStatus.OK).json(member);
-  // }
+  @Get('get/:email') // member/get/email@email.com
+  async getMember(@Param('email') email: string, @Res() res) {
+    const member = await this.memberService.findOne(email);
+    if (!member) {
+      throw new NotFoundException('Member does not exist!');
+    }
+    return res.status(HttpStatus.OK).json(member);
+  }
 
   // @UseGuards(LocalAuthGuard)
   @Post('/auth/login')
   async login(@Body() loginMemberDto: LoginMemberDto) {
-    console.log('@@@', loginMemberDto);
+    // console.log('@@@', loginMemberDto);
     return this.authService.validateMember(
       loginMemberDto.email,
       loginMemberDto.password,
@@ -88,6 +88,8 @@ export class MemberController {
     }
   }
 
+  // 다수 회원 삭제 처리
+  // id or email을 배열로 받아 넘겨주기
   @Delete('/delete/:email')
   async deleteMember(@Param('email') email: string, @Res() res) {
     const member = await this.memberService.delete(email);

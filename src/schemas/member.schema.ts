@@ -1,26 +1,36 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { QnA, QnASchema } from './qna.schema';
 
 export type MemberDocument = Member & Document;
 
-@Schema() // 해당 클래스를 스키마로 정의
+@Schema({ timestamps: true }) // 해당 클래스를 스키마로 정의
 export class Member {
-  @Prop()
-  position: string; // 회원구분> 영업담당자, 관리자
+  @Prop({ required: true, unique: true })
+  email!: string; // 이메일
+
+  @Prop({ required: true })
+  password!: string; // 비밀번호
+
+  @Prop({ required: true })
+  name!: string; // 이름
+
+  @Prop({ required: true })
+  position!: string; // 회원구분> 영업담당자, 관리자
+
+  @Prop({ required: true })
+  department!: string; // 부서
 
   @Prop()
-  department: string; // 부서
+  profileUrl?: string; // 프로필사진
+
+  @Prop({ default: Date.now })
+  createdAt!: Date; // 회원 등록 날짜
 
   @Prop()
-  name: string; // 이름
+  updatedAt: Date; // 회원 정보 수정 날짜
 
-  @Prop({ unique: true })
-  email: string; // 이메일
-
-  @Prop()
-  password: string; // 비밀번호
-
-  @Prop()
-  profileImage: string; // 프로필사진
+  @Prop({ type: QnASchema })
+  qna?: QnA; // QnA collection embedded
 }
 
 export const MemberSchema = SchemaFactory.createForClass(Member);
